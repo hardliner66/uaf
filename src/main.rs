@@ -42,12 +42,14 @@ async fn spawn_actor(
     }
 
     let uuid = Uuid::new_v4();
-    let mut child = Command::new(&spawn_actor.executable);
-    if spawn_actor.pass_id {
-        child.arg(uuid.to_string());
-    }
-    let mut child = child
-        .args(&spawn_actor.args)
+    let mut child = Command::new(&spawn_actor.executable)
+        .args(
+            &spawn_actor
+                .args
+                .iter()
+                .map(|s| s.replace("{ACTOR_ID}", &uuid.to_string()))
+                .collect::<Vec<_>>(),
+        )
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -175,16 +177,7 @@ async fn main() -> anyhow::Result<()> {
         });
     }
 
-    _ = spawn_actor(
-        &Props {
-            executable,
-            args,
-            pass_id: true,
-        },
-        true,
-        tx.clone(),
-    )
-    .await?;
+    _ = spawn_actor(&Props { executable, args }, true, tx.clone()).await?;
 
     Ok(())
 }

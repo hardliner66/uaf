@@ -20,7 +20,6 @@ pub struct Props {
     pub executable: std::path::PathBuf,
     #[serde(default)]
     pub args: Vec<String>,
-    pub pass_id: bool,
 }
 
 //'{"type": "message", "to": "73f31d83-a71e-4e32-a74a-263d3139f54d", "payload": {}}'

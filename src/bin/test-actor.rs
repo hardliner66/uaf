@@ -3,11 +3,9 @@ use indexmap::IndexMap;
 use serde::Serialize;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use uaf::{Data, LogMessage, Message, Props};
-use uuid::Uuid;
 
 #[derive(Debug, Parser)]
 struct Args {
-    my_id: Uuid,
     #[clap(default_value = "10")]
     max_count: usize,
 }
@@ -62,7 +60,6 @@ async fn main() {
                     send_message(&Props {
                         executable: std::path::PathBuf::from("/usr/bin/echo"),
                         args: vec![format!("{}", serde_json::to_string(&message).unwrap())],
-                        pass_id: false,
                     });
                 }
 
